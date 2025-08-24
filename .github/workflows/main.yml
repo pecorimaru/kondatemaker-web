@@ -1,0 +1,142 @@
+name: Build and Deploy React App
+
+on:
+  push:
+    branches:
+      - main  # メインブランチにプッシュされたときにトリガー
+  pull_request:
+    branches:
+      - main  # プルリクエスト時にもビルドをテスト
+
+jobs:
+  # ビルドとテストのジョブ
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ secrets.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tailwind CSS
+        run: npm run dev:css -- --minify
+
+      - name: Build React application
+        run: npm run build
+        env:
+          CI: false  # ワーニングをエラーとして扱わない
+          REACT_APP_API_CLIENT: ${{ secrets.REACT_APP_API_CLIENT }}
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
+          REACT_APP_TIMEOUT: ${{ secrets.REACT_APP_TIMEOUT }}
+          REACT_APP_LOG_LEVEL: ${{ secrets.REACT_APP_LOG_LEVEL }}
+
+      - name: Verify build directory
+        run: |
+          echo "Contents of build directory:"
+          ls -la build/
+          echo "Note: .htaccess files are managed directly on the server and not included in the build"
+
+      - name: Run tests
+        run: npm test -- --coverage --watchAll=false --passWithNoTests
+
+
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: build/
+          retention-days: 7
+
+  # デプロイジョブ（ビルドが成功した場合のみ実行）
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: build/
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Rental Server
+        run: |
+          echo "Deploying to rental server..."
+          
+          # レンタルサーバーのデプロイディレクトリが存在することを確認
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "mkdir -p ${{ secrets.DEPLOY_PATH }}"
+          
+          # 既存ファイルのバックアップ作成（安全のため）
+          echo "Creating backup of existing files..."
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "
+            if [ -d '${{ secrets.DEPLOY_PATH }}/static' ]; then
+              cp -r ${{ secrets.DEPLOY_PATH }} ${{ secrets.DEPLOY_PATH }}_backup_$(date +%Y%m%d_%H%M%S)
+            fi
+          "
+          
+          # 既存の.htaccessファイルをバックアップ
+          echo "Backing up existing .htaccess file..."
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "
+            if [ -f '${{ secrets.DEPLOY_PATH }}/.htaccess' ]; then
+              cp '${{ secrets.DEPLOY_PATH }}/.htaccess' '${{ secrets.DEPLOY_PATH }}/.htaccess.backup'
+              echo '.htaccess file backed up'
+            else
+              echo 'No existing .htaccess file found'
+            fi
+          "
+          
+          # ビルドファイルをレンタルサーバーの公開ディレクトリに直接デプロイ
+          # .htaccessファイルを保護するため--deleteから除外
+          echo "Copying build files to rental server..."
+          rsync -avz --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='*.map' \
+            --exclude='.htaccess' \
+            build/ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          
+          # .htaccessファイルの保護と復元
+          echo "Protecting .htaccess file..."
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "
+            if [ -f '${{ secrets.DEPLOY_PATH }}/.htaccess.backup' ]; then
+              cp '${{ secrets.DEPLOY_PATH }}/.htaccess.backup' '${{ secrets.DEPLOY_PATH }}/.htaccess'
+              echo '.htaccess file restored from backup'
+            else
+              echo 'Warning: No .htaccess backup found. Please ensure .htaccess is manually configured on the server.'
+            fi
+          "
+          
+          # デプロイ完了確認
+          echo "Verifying deployment..."
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "
+            echo 'Files in deployment directory:';
+            ls -la ${{ secrets.DEPLOY_PATH }}/;
+            echo 'Checking if index.html exists:';
+            if [ -f '${{ secrets.DEPLOY_PATH }}/index.html' ]; then
+              echo 'index.html found - deployment successful!';
+            else
+              echo 'index.html not found - deployment may have failed!';
+              exit 1;
+            fi
+          "
+          
+          echo "Deployment to rental server completed successfully!"
+          echo "Site should be available at: ${{ secrets.SITE_URL }}"
