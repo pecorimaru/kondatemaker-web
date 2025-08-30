@@ -5,7 +5,7 @@ import { AuthManager } from './authManager';
 
 // Axiosインスタンスを作成
 export const apiClient = axios.create({
-//   baseURL: 'http://localhost:3000/', // ベースURLを設定
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/', // ベースURLを設定
   timeout: process.env.REACT_APP_TIMEOUT ? Number(process.env.REACT_APP_TIMEOUT) : undefined,
   headers: {
     "Content-Type": "application/json",
