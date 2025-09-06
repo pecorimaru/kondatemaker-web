@@ -23,8 +23,8 @@ export const AppProvider: React.FC<BaseProviderTypes> = ({ children }) => {
     }, []);
 
     // API データの取得
-    const { loginUser, loginUserStat, loginUserMutate } = useLoginUser(isLoggedIn ?? false);
-    const { currentGroup, currentGroupStat, currentGroupMutate } = useCurrentGroup(isLoggedIn ?? false);
+    const { loginUser, loginUserStat, loginUserMutate } = useLoginUser(isLoggedIn ?? null);
+    const { currentGroup, currentGroupStat, currentGroupMutate } = useCurrentGroup(isLoggedIn ?? null);
     const { weekdayDict, weekdayDictStat } = useWeekdayDict();
     const { unitDict, unitDictStat } = useUnitDict();
     const { recipeTypeDict, recipeTypeDictStat } = useRecipeTypeDict();
