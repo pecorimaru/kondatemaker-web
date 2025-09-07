@@ -4,12 +4,13 @@
 
 AlmaLinuxサーバーでディスク容量不足に遭遇したことはありませんか？特にDockerを使用している環境では、不要なイメージやコンテナが蓄積され、知らぬ間にストレージを圧迫していることがあります。
 
-この記事では、AlmaLinuxでのシステムリソース確認からDockerの効率的なクリーンアップまでの手順を詳しく解説します。
+この記事では、AlmaLinuxでのシステムリソース確認からDockerの効率的なクリーンアップ、さらにVMwareでのディスク容量拡張まで包括的に解説します。
 
 ## 対象読者
 
 - AlmaLinuxを使用している開発者・運用担当者
 - Dockerでディスク容量不足に悩んでいる方
+- VMware環境でのディスク容量拡張を学びたい方
 - システムリソースの監視・管理を学びたい方
 
 ## 1. システムリソースの現状確認
@@ -227,9 +228,170 @@ sudo journalctl --vacuum-time=7d
 sudo find /var/log -name "*.log" -type f -mtime +7 -delete
 ```
 
-## 7. 予防策とベストプラクティス
+## 7. VMwareでのディスク容量拡張
 
-### 7.1 定期監視の設定
+クリーンアップでも容量が足りない場合は、VMware仮想マシンのディスク容量を拡張する必要があります。
+
+### 7.1 VMware vSphere Client / vCenter での拡張
+
+#### 仮想マシンの設定変更
+
+1. **仮想マシンの停止**
+   ```bash
+   # AlmaLinux側でシャットダウン
+   sudo shutdown -h now
+   ```
+
+2. **VMware vSphere Clientで設定変更**
+   - 仮想マシンを右クリック → 「設定の編集」
+   - 「ハードディスク」を選択
+   - 「ディスクサイズ」を増加（例：20GB → 50GB）
+   - 「OK」をクリックして設定を保存
+
+#### VMware Workstation / Player での拡張
+
+1. **仮想マシンの停止**
+2. **VMware Workstation/Playerで設定変更**
+   - 仮想マシンを右クリック → 「設定」
+   - 「ハードディスク」を選択
+   - 「ユーティリティ」→ 「拡張」
+   - 新しいサイズを入力（例：50GB）
+
+### 7.2 AlmaLinux側でのパーティション拡張
+
+VMware側でディスクを拡張した後、AlmaLinux側でパーティションを認識・拡張する必要があります。
+
+#### パーティション状況の確認
+
+```bash
+# 現在のディスク状況を確認
+lsblk
+
+# パーティションテーブルの確認
+sudo fdisk -l /dev/sda
+
+# ファイルシステムの確認
+df -h
+```
+
+**出力例：**
+```
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda      8:0    0   50G  0 disk 
+├─sda1   8:1    0    1G  0 part /boot
+├─sda2   8:2    0    2G  0 part [SWAP]
+└─sda3   8:3    0   17G  0 part /
+```
+
+#### growpartを使用した自動拡張（推奨）
+
+```bash
+# cloud-utilsをインストール（growpartコマンド用）
+sudo dnf install -y cloud-utils-growpart
+
+# パーティション3を自動拡張
+sudo growpart /dev/sda 3
+
+# ファイルシステムを拡張
+sudo xfs_growfs /
+# ext4の場合は: sudo resize2fs /dev/sda3
+```
+
+#### 手動でのパーティション拡張
+
+```bash
+# fdiskでパーティションを拡張
+sudo fdisk /dev/sda
+
+# fdisk内での操作：
+# p (パーティション情報表示)
+# d (削除) → 3 (パーティション3を削除)
+# n (新規作成) → p (プライマリ) → 3 → Enter → Enter
+# w (書き込み)
+
+# システムを再起動
+sudo reboot
+
+# ファイルシステムを拡張
+sudo xfs_growfs /
+```
+
+### 7.3 LVM使用時の拡張
+
+LVM（Logical Volume Manager）を使用している場合の拡張手順：
+
+```bash
+# 物理ボリュームの拡張
+sudo pvresize /dev/sda3
+
+# ボリュームグループの確認
+sudo vgdisplay
+
+# 論理ボリュームの拡張
+sudo lvextend -l +100%FREE /dev/mapper/almalinux-root
+
+# ファイルシステムの拡張
+sudo xfs_growfs /
+```
+
+### 7.4 拡張後の確認
+
+```bash
+# ディスク使用量の最終確認
+df -h
+
+# パーティション情報の確認
+lsblk
+
+# ファイルシステムの整合性チェック（必要に応じて）
+sudo xfs_repair -n /dev/sda3  # XFSの場合
+```
+
+**期待される出力例：**
+```
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3        47G   15G   30G  34% /
+```
+
+### 7.5 注意点とトラブルシューティング
+
+#### 重要な注意点
+
+- **バックアップの取得**: 拡張作業前に必ずデータのバックアップを取得
+- **仮想マシンの停止**: ディスク拡張時は仮想マシンを完全に停止
+- **スナップショット**: 可能であれば拡張前にVMのスナップショットを作成
+
+#### よくある問題と対処法
+
+**問題1: growpartが見つからない**
+```bash
+# EPELリポジトリを有効化してインストール
+sudo dnf install -y epel-release
+sudo dnf install -y cloud-utils-growpart
+```
+
+**問題2: パーティションが認識されない**
+```bash
+# カーネルにパーティションテーブルの変更を通知
+sudo partprobe /dev/sda
+
+# または再起動
+sudo reboot
+```
+
+**問題3: XFSファイルシステムの拡張に失敗**
+```bash
+# マウント状態を確認
+mount | grep /dev/sda3
+
+# アンマウントして修復後に再拡張
+sudo umount /
+# （緊急時のみ、通常は再起動推奨）
+```
+
+## 8. 予防策とベストプラクティス
+
+### 8.1 定期監視の設定
 
 ```bash
 # ディスク使用率監視スクリプト
@@ -243,7 +405,7 @@ if [ $USAGE -gt $THRESHOLD ]; then
 fi
 ```
 
-### 7.2 開発環境でのベストプラクティス
+### 8.2 開発環境でのベストプラクティス
 
 - **multi-stage buildの活用**: 最終イメージサイズを削減
 - **適切な.dockerignoreの設定**: 不要なファイルをコンテキストから除外
@@ -269,8 +431,9 @@ AlmaLinuxでのDockerリソース管理は、定期的な監視とクリーン�
 
 1. **定期的なリソース確認**: `docker system df`でリソース使用量を把握
 2. **段階的なクリーンアップ**: 重要なデータを保護しながら不要なリソースを削除
-3. **自動化の活用**: cronやスクリプトで定期メンテナンスを実装
-4. **予防策の実施**: 効率的なDockerfileとベストプラクティスの適用
+3. **VMwareディスク拡張**: クリーンアップで不足する場合の根本的解決
+4. **自動化の活用**: cronやスクリプトで定期メンテナンスを実装
+5. **予防策の実施**: 効率的なDockerfileとベストプラクティスの適用
 
 適切なリソース管理により、安定したDockerコンテナ環境を維持できるでしょう。
 
@@ -279,6 +442,8 @@ AlmaLinuxでのDockerリソース管理は、定期的な監視とクリーン�
 - [Docker公式ドキュメント - docker system prune](https://docs.docker.com/engine/reference/commandline/system_prune/)
 - [AlmaLinux公式サイト](https://almalinux.org/)
 - [systemd tmpfs設定](https://www.freedesktop.org/software/systemd/man/tmpfs.html)
+- [VMware vSphere ディスク管理](https://docs.vmware.com/jp/VMware-vSphere/)
+- [Linux パーティション管理 - fdisk](https://man7.org/linux/man-pages/man8/fdisk.8.html)
 
 ---
 
