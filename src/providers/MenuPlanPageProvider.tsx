@@ -31,14 +31,14 @@ export const MenuPlanPageProvider: React.FC<MenuPlanPageProviderTypes> = ({ chil
     // --- useEffectでリスト初期化 ---
     useEffect(() => {
       if (!menuPlanDtoListStat.isLoading) {
-        setMenuPlanViewList(
+        setMenuPlanViewList(prevList =>
           menuPlanDtoList?.map((item, index) => ({
             ...item,
-            menuPlanDetVisible: menuPlanViewList?.[index]?.menuPlanDetVisible || VISIBLE_TYPE.HIDDEN,
+            menuPlanDetVisible: prevList?.[index]?.menuPlanDetVisible || VISIBLE_TYPE.HIDDEN,
           }))
         );
       }
-    }, [menuPlanDtoList, menuPlanDtoListStat.isLoading, menuPlanViewList]);
+    }, [menuPlanDtoList, menuPlanDtoListStat.isLoading]);
   
     // --- 表示用リストの更新 ---
     const updateMenuPlanViewList = useCallback((updIndex: number, key: string, flg: any, isAll = false) => {

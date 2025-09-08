@@ -17,15 +17,15 @@ export const RecipePageProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   useEffect(() => {
     if (!recipeDtoListStat.isLoading) {
-      setRecipeViewList(
+      setRecipeViewList(prevList =>
         recipeDtoList
         ?.map((item, index) => ({
           ...item,
-          recipeIngredVisible: recipeViewList?.[index]?.recipeIngredVisible || VISIBLE_TYPE.HIDDEN,
+          recipeIngredVisible: prevList?.[index]?.recipeIngredVisible || VISIBLE_TYPE.HIDDEN,
         })) ?? []
       );
     };
-  }, [recipeDtoList, recipeDtoListStat.isLoading, recipeViewList]);
+  }, [recipeDtoList, recipeDtoListStat.isLoading]);
 
   const flg = { recipeIngredVisible: "recipeIngredVisible" };
   const switchFlgRecipeAcc = useCallback((updIndex: number, key: string, flg: any, isAll = false) => {
