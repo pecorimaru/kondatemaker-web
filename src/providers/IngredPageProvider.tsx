@@ -18,14 +18,14 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
 
   useEffect(() => {
     if (!ingredDtoListStat.isLoading) {
-      setIngredViewList(
+      setIngredViewList(prevList =>
         ingredDtoList?.map((item, index) => ({
           ...item,
-          ingredUnitConvVisible: ingredViewList?.[index]?.ingredUnitConvVisible || VISIBLE_TYPE.HIDDEN,
+          ingredUnitConvVisible: prevList?.[index]?.ingredUnitConvVisible || VISIBLE_TYPE.HIDDEN,
         }))
       );
     }
-  }, [ingredDtoList, ingredDtoListStat.isLoading, ingredViewList]);
+  }, [ingredDtoList, ingredDtoListStat.isLoading]);
 
   const flg = { ingredUnitConvVisible: "ingredUnitConvVisible" } as const;
   const switchFlgIngredAcc = useCallback((
