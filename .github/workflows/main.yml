@@ -44,7 +44,7 @@ jobs:
           echo "Note: .htaccess files are managed directly on the server and not included in the build"
 
       - name: Run tests
-        run: npm test -- --coverage --watchAll=false --passWithNoTests
+        run: npm test -- --coverage --run --passWithNoTests
 
 
 
