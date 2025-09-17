@@ -32,7 +32,7 @@ export const UserSettingPageProvider: React.FC<{children: React.ReactNode}> = ({
     };
     clearMessage();
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/submitEditUserNm`, decamelizeKeys({ editUserNm }));
+      const response = await apiClient.post(`api/setting/submitEditUserNm`, decamelizeKeys({ editUserNm }));
       const data = response.data;
       console.log(data.messaage, data);
       setUserNm(editUserNm);
@@ -45,7 +45,7 @@ export const UserSettingPageProvider: React.FC<{children: React.ReactNode}> = ({
     clearMessage();
     try {
       const response = await apiClient.post(
-        `${process.env.REACT_APP_API_CLIENT}/setting/submitChangePassword`, 
+        `api/setting/submitChangePassword`, 
         decamelizeKeys({ currentPassword, newPassword })
       );
       const data = response.data;
@@ -63,7 +63,7 @@ export const UserSettingPageProvider: React.FC<{children: React.ReactNode}> = ({
     };
     clearMessage();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/setting/submitDeleteUser`, { 
+      const response = await apiClient.delete("api/setting/submitDeleteUser", { 
       });
       const data = await response.data;
       console.log("削除成功", data);

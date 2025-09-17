@@ -24,7 +24,7 @@ export const ResetPasswordPage = () => {
     clearMessage();
     setLoading(true);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/resetPassword`, decamelizeKeys({ email }));
+      const response = await apiClient.post(`api/login/resetPassword`, decamelizeKeys({ email }));
       const data  = response?.data;
       showMessage(data.message, MESSAGE_TYPE.INFO);
       setEmail("");

@@ -14,10 +14,10 @@ export function useFetchData<T = any>(key: string, params: Record<string, any>) 
   if (hasNullOrUndefined(params)) {
     fetchUrl = null;
   } else if (Object.keys(params).length === 0) {
-    fetchUrl = `${process.env.REACT_APP_API_CLIENT}/${key}`;
+    fetchUrl = `api/${key}`;
   } else {
     const queryParams = new URLSearchParams(params).toString();
-    fetchUrl = `${process.env.REACT_APP_API_CLIENT}/${key}/queryParams?${queryParams}`;
+    fetchUrl = `api/${key}/queryParams?${queryParams}`;
   }
   return useSWR<T, any>(fetchUrl, fetcher, {
     // 画面復帰時の再取得を強制

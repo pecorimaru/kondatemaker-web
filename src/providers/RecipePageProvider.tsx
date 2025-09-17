@@ -59,7 +59,7 @@ export const RecipePageProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     clearMessage();
     console.log(`レシピ追加 レシピ名:${formData?.recipeNm} レシピ名（かな）${formData?.recipeNmK} レシピ種別:${formData?.recipeType} レシピURL:${formData?.recipeUrl}`);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/recipe/submitAddRecipe`, { 
+      const response = await apiClient.post("api/recipe/submitAddRecipe", { 
         recipeNm: formData?.recipeNm,
         recipeNmK: formData?.recipeNmK,
         recipeType: formData?.recipeType, 
@@ -80,7 +80,7 @@ export const RecipePageProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     clearMessage();
     console.log(`レシピ更新 レシピ名:${formData?.recipeNm} レシピ名（かな）${formData?.recipeNmK} レシピ種別:${formData?.recipeType} レシピURL:${formData?.recipeUrl}`);
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/recipe/submitEditRecipe`, { 
+      const response = await apiClient.put("api/recipe/submitEditRecipe", { 
         recipeId: editRecipeId,
         recipeNm: formData?.recipeNm,
         recipeNmK: formData?.recipeNmK,
@@ -106,7 +106,7 @@ export const RecipePageProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
     const queryParams = new URLSearchParams(decamelizeKeys({ recipeId: row?.recipeId })).toString();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/recipe/submitDeleteRecipe/queryParams?${queryParams}`);
+      const response = await apiClient.delete(`api/recipe/submitDeleteRecipe/queryParams?${queryParams}`);
       const data = await response.data;
       console.log(data.message, data);
       recipeDtoListMutate(recipeDtoList?.filter((item) => (item.recipeId !== row?.recipeId)));

@@ -27,7 +27,7 @@ export const SignUpPageProvider: React.FC<{children: React.ReactNode}> = ({ chil
     }
     setLoading(true);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/createUser`, decamelizeKeys({ email, password }));
+      const response = await apiClient.post("api/login/createUser", decamelizeKeys({ email, password }));
       const data  = response?.data;
       showMessage(data.message, MESSAGE_TYPE.INFO);
       setEmail("");
@@ -50,7 +50,7 @@ export const SignUpPageProvider: React.FC<{children: React.ReactNode}> = ({ chil
           },
         });
         const userinfoData = userinfoResponse.data;
-        const verifyResponse = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/googleLogin`, decamelizeKeys({ email: userinfoData.email }));
+        const verifyResponse = await apiClient.post("api/login/googleLogin", decamelizeKeys({ email: userinfoData.email }));
         const verifyData = verifyResponse.data;
         localStorage.setItem("token", verifyData.accessToken);
         localStorage.setItem("isLoggedIn", "true");

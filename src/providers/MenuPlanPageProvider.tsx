@@ -70,7 +70,7 @@ export const MenuPlanPageProvider: React.FC<MenuPlanPageProviderTypes> = ({ chil
     const submitAddMenuPlan = async (formData: MenuPlanFormData) => {
       clearMessage();
       try {
-        const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitAddMenuPlan`, { 
+        const response = await apiClient.post("api/menuPlan/submitAddMenuPlan", { 
           menuPlanNm: formData.menuPlanNm,
           menuPlanNmK: formData?.menuPlanNmK,
         });
@@ -85,7 +85,7 @@ export const MenuPlanPageProvider: React.FC<MenuPlanPageProviderTypes> = ({ chil
     const submitEditMenuPlan = async (formData: MenuPlanFormData) => {
       clearMessage();
       try {
-        const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitEditMenuPlan`, { 
+        const response = await apiClient.put("api/menuPlan/submitEditMenuPlan", { 
           menuPlanId: editMenuPlanId,
           menuPlanNm: formData.menuPlanNm,
           menuPlanNmK: formData?.menuPlanNmK,
@@ -106,7 +106,7 @@ export const MenuPlanPageProvider: React.FC<MenuPlanPageProviderTypes> = ({ chil
       if (!deleteable) return;
       const queryParams = new URLSearchParams(decamelizeKeys({ menuPlanId: row.menuPlanId })).toString();
       try {
-        await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitDeleteMenuPlan/query_params?${queryParams}`);
+        await apiClient.delete(`api/menuPlan/submitDeleteMenuPlan/query_params?${queryParams}`);
         menuPlanDtoListMutate(menuPlanDtoList?.filter((item) => (item.menuPlanId !== row.menuPlanId)));
         closeContextMenu();
       } catch (error: any) {

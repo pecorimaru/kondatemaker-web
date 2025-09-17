@@ -5,8 +5,8 @@ import { AuthManager } from './authManager';
 
 // Axiosインスタンスを作成
 export const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/', // ベースURLを設定
-  timeout: process.env.REACT_APP_TIMEOUT ? Number(process.env.REACT_APP_TIMEOUT) : undefined,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/', // ベースURLを設定
+  timeout: import.meta.env.VITE_TIMEOUT ? Number(import.meta.env.VITE_TIMEOUT) : undefined,
   headers: {
     "Content-Type": "application/json",
   },
@@ -14,7 +14,7 @@ export const apiClient = axios.create({
 });
 
 // 環境変数からログレベルを取得
-const logLevel = process.env.REACT_APP_LOG_LEVEL || 'error';
+const logLevel = import.meta.env.VITE_LOG_LEVEL || 'error';
 
 apiClient.interceptors.request.use(
   (config) => {
@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/refresh`);
+        const response = await apiClient.post(`api/login/refresh`);
         localStorage.setItem("token", response.data.newAccessToken);
         // 状態変数は変更しない（まだログイン状態のため）
         console.log("refresh successful")
@@ -61,7 +61,7 @@ apiClient.interceptors.response.use(
       AuthManager.logout();
     };
 
-    if (error.message === `timeout of ${process.env.REACT_APP_TIMEOUT}ms exceeded`) {
+    if (error.message === `timeout of ${import.meta.env.VITE_TIMEOUT}ms exceeded`) {
       error._messageTimeout = MESSAGE.TIMEOUT
     };
     if (logLevel === 'debug') {
