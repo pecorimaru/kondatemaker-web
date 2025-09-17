@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await apiClient.post(`api/login/refresh`);
+        const response = await apiClient.post("api/login/refresh");
         localStorage.setItem("token", response.data.newAccessToken);
         // 状態変数は変更しない（まだログイン状態のため）
         console.log("refresh successful")
