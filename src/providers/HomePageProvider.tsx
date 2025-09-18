@@ -34,7 +34,7 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     selectedPlanMutate(menuPlan, false);
     setIsRefreshing(true);
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/home/submitRecreateToweekMenuPlan`, { selectedPlanId: menuPlan.menuPlanId });
+      const response = await apiClient.put("api/home/submitRecreateToweekMenuPlan", { selectedPlanId: menuPlan.menuPlanId });
       const data  = response.data;
       console.log(data.message, data);
       toweekMenuPlanDetListDictMutate(data.newToweekMenuPlanDetListDict, false);
@@ -50,7 +50,7 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     clearMessage();
     console.log(`今週献立明細追加 レシピ名:${formData.recipeNm}`);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/home/submitAddToweekMenuPlanDet`, { 
+      const response = await apiClient.post("api/home/submitAddToweekMenuPlanDet", { 
         recipeNm: formData.recipeNm,
         weekdayCd: formData.weekdayCd,
       });

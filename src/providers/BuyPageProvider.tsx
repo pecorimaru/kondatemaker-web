@@ -49,7 +49,7 @@ export const BuyPageProvider: React.FC<BaseProviderTypes> = ({ children }) => {
     setCompleteList([...stillComplete || [], ...changeToComplete]);
     setIncompleteList([...stillIncomplete || [], ...changeToIncomplete]);
     const boughtFlg = !row?.isBought ? "T" : "F";
-    apiClient.put(`${process.env.REACT_APP_API_CLIENT}/buy/submitSwitchCompletion`, decamelizeKeys({ buyIngredId: row?.buyIngredId, boughtFlg }))
+    apiClient.put("api/buy/submitSwitchCompletion", decamelizeKeys({ buyIngredId: row?.buyIngredId, boughtFlg }))
       .then(response => {
         const data  = response.data;
         console.log(data.message, data);
@@ -88,7 +88,7 @@ export const BuyPageProvider: React.FC<BaseProviderTypes> = ({ children }) => {
   const submitAddBuyIngred = async (formData: IngredSelectFormData, clearForm: () => void) => {
     console.log(`購入食材追加 食材名:${formData?.ingredNm} 必要量:${formData?.qty} 単位:${formData?.unitCd} 売り場:${formData?.salesAreaType}`)
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/buy/submitAddBuyIngred`, { 
+      const response = await apiClient.post("api/buy/submitAddBuyIngred", { 
         ingredNm: formData?.ingredNm,
         qty: formData?.qty, 
         unitCd: formData?.unitCd, 
@@ -109,7 +109,7 @@ export const BuyPageProvider: React.FC<BaseProviderTypes> = ({ children }) => {
   const submitEditBuyIngred = async (formData: IngredSelectFormData) => {
     console.log(`購入食材更新 食材名:${formData?.ingredNm} 必要量:${formData?.qty} 単位:${formData?.unitCd} 売り場:${formData?.salesAreaType}`)
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/buy/submitEditBuyIngred`, { 
+      const response = await apiClient.put("api/buy/submitEditBuyIngred", { 
         buyIngredId: editBuyIngredId,
         ingredNm: formData?.ingredNm,
         qty: formData?.qty, 
@@ -133,7 +133,7 @@ export const BuyPageProvider: React.FC<BaseProviderTypes> = ({ children }) => {
     if (deleteable) {
       const query_params = new URLSearchParams(decamelizeKeys({ buyIngredId: row?.buyIngredId })).toString();
       try {
-        const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/buy/submitDeleteBuyIngred/queryParams?${query_params}`);
+        const response = await apiClient.delete(`api/buy/submitDeleteBuyIngred/queryParams?${query_params}`);
         const data = await response.data;
         console.log(data.message, data);
         buyIngredListMutate(buyIngredList?.filter((item) => (item?.buyIngredId !== row?.buyIngredId)));

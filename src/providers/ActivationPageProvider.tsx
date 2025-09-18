@@ -27,7 +27,7 @@ export const ActivationPageProvider: React.FC<{children: React.ReactNode}> = ({ 
     };
     setMessage("アカウントを有効化しています...")
     try { 
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/activate`, decamelizeKeys({ token }));
+      const response = await apiClient.post("api/login/activate", decamelizeKeys({ token }));
       const data = response.data;
       setStatus("ok");
       setMessage(data.message);

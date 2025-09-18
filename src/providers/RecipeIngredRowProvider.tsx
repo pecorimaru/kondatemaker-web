@@ -59,7 +59,7 @@ export const RecipeIngredRowProvider: React.FC<RecipeIngredRowProviderTypes> = (
     clearMessage();
     console.log(`レシピ食材追加 レシピID:${recipe?.recipeId} 食材名:${formData?.ingredNm} 必要量:${formData?.qty} 単位コード:${formData?.unitCd} 売り場区分${formData?.salesAreaType}`);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/recipe/submitAddRecipeIngred`, { 
+      const response = await apiClient.post("api/recipe/submitAddRecipeIngred", { 
         recipeId: recipe?.recipeId,
         ingredNm: formData?.ingredNm,
         qty: formData?.qty, 
@@ -82,7 +82,7 @@ export const RecipeIngredRowProvider: React.FC<RecipeIngredRowProviderTypes> = (
     clearMessage();
     console.log(`レシピ食材更新 レシピ食材ID${editRecipeIngredId} レシピID:${recipe?.recipeId} 食材名:${formData?.ingredNm} 必要量:${formData?.qty} 単位コード:${formData?.unitCd} 売り場区分${formData?.salesAreaType}`);
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/recipe/submitEditRecipeIngred`, { 
+      const response = await apiClient.put("api/recipe/submitEditRecipeIngred", { 
         recipeIngredId: editRecipeIngredId,
         ingredNm: formData?.ingredNm,
         qty: formData?.qty, 
@@ -109,7 +109,7 @@ export const RecipeIngredRowProvider: React.FC<RecipeIngredRowProviderTypes> = (
     }
     const queryParams = new URLSearchParams(decamelizeKeys({ recipeIngredId: row?.recipeIngredId })).toString();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/recipe/submitDeleteRecipeIngred/query_params?${queryParams}`);
+      const response = await apiClient.delete(`api/recipe/submitDeleteRecipeIngred/query_params?${queryParams}`);
       const data = await response.data;
       console.log(data.message, data);
       if (recipeIngredDtoList) {

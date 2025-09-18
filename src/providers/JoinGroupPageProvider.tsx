@@ -24,7 +24,7 @@ export const JoinGroupPageProvider: React.FC<{children: React.ReactNode}> = ({ c
 
     setMessage("グループに参加しています...")
     try { 
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/joinGroup`, decamelizeKeys({ token }));
+      const response = await apiClient.post("api/setting/joinGroup", decamelizeKeys({ token }));
       const data = response.data;
       setStatus("ok");
       setMessage(data.message);

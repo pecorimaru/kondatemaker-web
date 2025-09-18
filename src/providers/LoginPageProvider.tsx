@@ -33,7 +33,7 @@ export const LoginPageProvider: React.FC<BaseProviderTypes> = ({ children }) => 
           },
         });
         const userinfoData = userinfoResponse.data;
-        const verifyResponse = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/googleLogin`, decamelizeKeys({ email: userinfoData.email }));
+        const verifyResponse = await apiClient.post("api/login/googleLogin", decamelizeKeys({ email: userinfoData.email }));
         const verifyData = verifyResponse.data;
         localStorage.setItem("token", verifyData.accessToken);
         localStorage.setItem("isLoggedIn", "true");
@@ -55,7 +55,7 @@ export const LoginPageProvider: React.FC<BaseProviderTypes> = ({ children }) => 
     clearMessage();
     setLoading(true);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/login/login`, decamelizeKeys({ email, password }));
+      const response = await apiClient.post("api/login/login", decamelizeKeys({ email, password }));
       const data = response.data;
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("isLoggedIn", "true");

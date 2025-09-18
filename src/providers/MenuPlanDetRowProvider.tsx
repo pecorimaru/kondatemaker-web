@@ -36,7 +36,7 @@ export const MenuPlanDetRowProvider: React.FC<MenuPlanDetRowProviderTypes> = ({ 
     const submitAddMenuPlanDet = async (formData: MenuPlanDetFormData) => {
       clearMessage();
       try {
-        const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitAddMenuPlanDet`, { 
+        const response = await apiClient.post("api/menuPlan/submitAddMenuPlanDet", { 
           menuPlanId: menuPlan.menuPlanId,
           weekdayCd: formData.weekdayCd,
           recipeNm: formData.recipeNm, 
@@ -70,7 +70,7 @@ export const MenuPlanDetRowProvider: React.FC<MenuPlanDetRowProviderTypes> = ({ 
     const submitEditMenuPlanDet = async (formData: MenuPlanDetFormData) => {
       clearMessage();
       try {
-        const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitEditMenuPlanDet`, { 
+        const response = await apiClient.put("api/menuPlan/submitEditMenuPlanDet", { 
           menuPlanDetId: editMenuPlanDetId,
           weekdayCd: formData.weekdayCd,
           recipeNm: formData.recipeNm, 
@@ -94,7 +94,7 @@ export const MenuPlanDetRowProvider: React.FC<MenuPlanDetRowProviderTypes> = ({ 
       setApplyHighlighted(false);
       const queryParams = new URLSearchParams(decamelizeKeys({ menuPlanDetId: row.menuPlanDetId })).toString();
       try {
-        await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/menuPlan/submitDeleteMenuPlanDet/query_params?${queryParams}`);
+        await apiClient.delete(`api/menuPlan/submitDeleteMenuPlanDet/query_params?${queryParams}`);
         menuPlanDetDtoListMutate(menuPlanDetDtoList?.filter((item) => (item.menuPlanDetId !== row?.menuPlanDetId)));
       } catch (error: any) {
         showMessage(error?.response?.data?.detail || error?._messageTimeout || MSG_MISSING_REQUEST, MESSAGE_TYPE.ERROR);

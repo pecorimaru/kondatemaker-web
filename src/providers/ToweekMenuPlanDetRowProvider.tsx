@@ -195,7 +195,7 @@ export const ToweekMenuPlanDetRowProvider: React.FC<ToweekMenuPlanDetRowProvider
     const editMenuPlanDet = getEditingToweekMenuPlanDet(toweekMenuPlanDetViewList);
     console.log(`今週献立明細編集 今週献立明細ID:${editMenuPlanDet?.toweekMenuPlanDetId} レシピ名:${recipeNm}`);
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/home/submitEditToweekMenuPlanDet`, { 
+      const response = await apiClient.put("api/home/submitEditToweekMenuPlanDet", { 
         toweekMenuPlanDetId: editMenuPlanDet?.toweekMenuPlanDetId,
         recipeNm: recipeNm,
       });
@@ -216,7 +216,7 @@ export const ToweekMenuPlanDetRowProvider: React.FC<ToweekMenuPlanDetRowProvider
     clearMessage();
     const queryParams = new URLSearchParams(decamelizeKeys({ toweekMenuPlanDetId: row?.toweekMenuPlanDetId })).toString();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/home/submitDeleteToweekMenuPlanDet/query_params?${queryParams}`);
+      const response = await apiClient.delete(`api/home/submitDeleteToweekMenuPlanDet/query_params?${queryParams}`);
       const data = await response.data;
       console.log(data.message, data);
       toweekMenuPlanDetListDictMutate(data.toweekMenuPlanDetListDict);

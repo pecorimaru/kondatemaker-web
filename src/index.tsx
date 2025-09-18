@@ -14,10 +14,10 @@ if (rootElement) {  // rootElementがnullでないことを確認
   const root = createRoot(rootElement);
 
   // 環境変数でStrictModeを制御
-  const isStrictModeEnabled = process.env.REACT_APP_STRICT_MODE === 'true';
+  const isStrictModeEnabled = import.meta.env.VITE_STRICT_MODE === 'true';
   
   const AppComponent = (
-    <GoogleOAuthProvider clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <AppProvider>
         <App />
       </AppProvider>

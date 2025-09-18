@@ -35,7 +35,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = ({
     // localStorage.removeItem("isLoggedIn");
     // setIsLoggedIn(false);
     // window.location.href = '/';
-    await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/logout`)
+    await apiClient.post("api/setting/logout")
       .catch(error => {
         showMessage(
           error?.response?.data?.detail || 

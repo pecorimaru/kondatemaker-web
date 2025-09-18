@@ -42,7 +42,7 @@ export const IngredUnitConvRowProvider: React.FC<IngredUnitConvRowProviderTypes>
     clearMessage();
     console.log(`食材単位変換追加 食材ID:${ingred?.ingredId} 変換単位:${formData?.convUnitCd} 変換率:${formData?.convRate}`);
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/ingred/submitAddIngredUnitConv`, { 
+      const response = await apiClient.post("api/ingred/submitAddIngredUnitConv", { 
         ingredId: ingred?.ingredId,
         convUnitCd: formData?.convUnitCd,
         convRate: (formData?.convRate || 0) / (ingred.unitConvWeight || 1), 
@@ -62,7 +62,7 @@ export const IngredUnitConvRowProvider: React.FC<IngredUnitConvRowProviderTypes>
     clearMessage();
     console.log(`食材単位変換編集 食材ID:${ingred?.ingredId} 変換単位:${formData?.convUnitCd} 変換率:${formData?.convRate} `);
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/ingred/submitEditIngredUnitConv`, { 
+      const response = await apiClient.put("api/ingred/submitEditIngredUnitConv", { 
         ingredUnitConvId: editIngredUnitConvId,
         ingredId: ingred?.ingredId,
         convUnitCd: formData?.convUnitCd,
@@ -89,7 +89,7 @@ export const IngredUnitConvRowProvider: React.FC<IngredUnitConvRowProviderTypes>
     clearMessage();
     const queryParams = new URLSearchParams(decamelizeKeys({ ingredUnitConvId: row?.ingredUnitConvId })).toString();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/ingred/submitDeleteIngredUnitConv/query_params?${queryParams}`);
+      const response = await apiClient.delete(`api/ingred/submitDeleteIngredUnitConv/query_params?${queryParams}`);
       const data = await response.data;
       console.log(data.message, data);
       if (ingredUnitConvDtoList) {

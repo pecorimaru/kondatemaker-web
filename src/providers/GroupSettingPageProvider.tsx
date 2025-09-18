@@ -25,7 +25,7 @@ export const GroupSettingPageProvider: React.FC<{children: React.ReactNode}> = (
     };
     clearMessage();
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/submitEditGroupNm`, decamelizeKeys({ editGroupNm }));
+      const response = await apiClient.post("api/setting/submitEditGroupNm", decamelizeKeys({ editGroupNm }));
       const data = response.data;
       console.log(data.message, data);
       currentGroupMutate(data.editGroup);
@@ -41,7 +41,7 @@ export const GroupSettingPageProvider: React.FC<{children: React.ReactNode}> = (
     };
     clearMessage();
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/exitGroup`);
+      const response = await apiClient.post("api/setting/exitGroup");
       const data = response.data;
       console.log(data.message, data);
       localStorage.setItem("token", data.accessToken);
@@ -54,7 +54,7 @@ export const GroupSettingPageProvider: React.FC<{children: React.ReactNode}> = (
   const submitChangeGroup = async(groupId: number) => {
     clearMessage();
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/changeGroup`, decamelizeKeys({ groupId }));
+      const response = await apiClient.post("api/setting/changeGroup", decamelizeKeys({ groupId }));
       const data = response.data;
       localStorage.setItem("token", data.accessToken);
       window.location.reload();
@@ -70,7 +70,7 @@ export const GroupSettingPageProvider: React.FC<{children: React.ReactNode}> = (
   const submitMemberInvite = async (formData: { toEmail: string }) => {
     clearMessage();
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/setting/submitMemberInvite`, decamelizeKeys({ toEmail: formData.toEmail }));
+      const response = await apiClient.post("api/setting/submitMemberInvite", decamelizeKeys({ toEmail: formData.toEmail }));
       const data = response.data;
       console.log(data.message, data);
       showMessage(data.message, MESSAGE_TYPE.INFO);

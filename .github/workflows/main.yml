@@ -32,11 +32,10 @@ jobs:
         run: npm run build
         env:
           CI: false  # ワーニングをエラーとして扱わない
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_API_CLIENT: ${{ secrets.REACT_APP_API_CLIENT }}
-          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
-          REACT_APP_TIMEOUT: ${{ secrets.REACT_APP_TIMEOUT }}
-          REACT_APP_LOG_LEVEL: ${{ secrets.REACT_APP_LOG_LEVEL }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_TIMEOUT: ${{ secrets.VITE_TIMEOUT }}
+          VITE_LOG_LEVEL: ${{ secrets.VITE_LOG_LEVEL }}
 
       - name: Verify build directory
         run: |
@@ -45,7 +44,7 @@ jobs:
           echo "Note: .htaccess files are managed directly on the server and not included in the build"
 
       - name: Run tests
-        run: npm test -- --coverage --watchAll=false --passWithNoTests
+        run: npm test -- --coverage --run --passWithNoTests
 
 
 

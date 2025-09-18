@@ -70,7 +70,7 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
       売り場:${formData?.salesAreaType}`
     );
     try {
-      const response = await apiClient.post(`${process.env.REACT_APP_API_CLIENT}/ingred/submitAddIngred`, { 
+      const response = await apiClient.post("api/ingred/submitAddIngred", { 
         ingredNm: formData?.ingredNm,
         ingredNmK: formData?.ingredNmK,
         parentIngredNm: formData?.parentIngredNm, 
@@ -100,7 +100,7 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
       売り場:${formData?.salesAreaType}`
     );
     try {
-      const response = await apiClient.put(`${process.env.REACT_APP_API_CLIENT}/ingred/submitEditIngred`, { 
+      const response = await apiClient.put("api/ingred/submitEditIngred", { 
         ingredId: editIngredId,
         ingredNm: formData?.ingredNm,
         ingredNmK: formData?.ingredNmK,
@@ -129,7 +129,7 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
     clearMessage();
     const queryParams = new URLSearchParams(decamelizeKeys({ ingredId: row?.ingredId })).toString();
     try {
-      const response = await apiClient.delete(`${process.env.REACT_APP_API_CLIENT}/ingred/submitDeleteIngred/queryParams?${queryParams}`);
+      const response = await apiClient.delete(`api/ingred/submitDeleteIngred/queryParams?${queryParams}`);
       const data = await response.data;
       console.log(data.message, data);
       if (ingredDtoList) {
