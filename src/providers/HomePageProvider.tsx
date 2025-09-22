@@ -7,7 +7,7 @@ import { MESSAGE_TYPE, MSG_MISSING_REQUEST } from '@/constants';
 
 export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { closeContextMenu, showMessage, setIsOpeningForm, clearMessage } = useApp();
-  const { selectedPlan, selectedPlanStat, selectedPlanMutate } = useSelectedPlan();
+  // const { selectedPlan, selectedPlanStat, selectedPlanMutate } = useSelectedPlan();
   const { menuPlanDtoList, menuPlanDtoListStat } = useMenuPlanList();
   const { toweekMenuPlanDetListDict, toweekMenuPlanDetListDictStat, toweekMenuPlanDetListDictMutate } = useToweekMenuPlanDetListDict();
   const [toweekMenuPlanDetViewListDict, setToweekMenuPlanDetListDictView] = useState<Record<string, ToweekMenuPlanDetView[]>>();
@@ -16,10 +16,26 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isAddMenuPlanDet, setIsAddMenuPlanDet] = useState<boolean>(false);
 
+  const [selectedPlan, setSelectedPlan] = useState<MenuPlanDto | null>(null);
 
   useEffect(() => {
     if(!toweekMenuPlanDetListDictStat?.isLoading) setToweekMenuPlanDetListDictView(toweekMenuPlanDetListDict);
   }, [toweekMenuPlanDetListDict, toweekMenuPlanDetListDictStat?.isLoading, setToweekMenuPlanDetListDictView]); 
+
+  // 今週の献立を取得
+  useEffect(() => {
+    fetchSelectedPlan();
+  }, []);
+
+  async function fetchSelectedPlan() {
+    try {
+      const response = await apiClient.get("api/home/selectedPlan");
+      const data = await response.data;
+      setSelectedPlan(data);
+    } catch (error: any) {
+      showMessage(error?.response?.data?.detail || error?._messageTimeout || MSG_MISSING_REQUEST, MESSAGE_TYPE.ERROR);
+    }
+  }
 
   const handleMenuPlanComboBoxClick = async (menuPlan: MenuPlanDto) => {
     setIsMenuPlanComboBoxOpen(false);
@@ -37,7 +53,8 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const data  = response.data;
       console.log(data.message, data);
       // APIレスポンス後に状態を更新（競合状態を回避）
-      selectedPlanMutate(menuPlan);
+      // selectedPlanMutate(menuPlan);
+      setSelectedPlan(menuPlan);
       toweekMenuPlanDetListDictMutate(data.newToweekMenuPlanDetListDict, false);
     } catch (error: any) {
       showMessage(error?.response?.data?.detail || error?._messageTimeout || MSG_MISSING_REQUEST, MESSAGE_TYPE.ERROR);
@@ -84,8 +101,8 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const contextValue: HomePageContextTypes = {
     selectedPlan,
-    selectedPlanStat,
-    selectedPlanMutate,
+    // selectedPlanStat,
+    // selectedPlanMutate,
     menuPlanDtoList,
     menuPlanDtoListStat,
     toweekMenuPlanDetListDict,
