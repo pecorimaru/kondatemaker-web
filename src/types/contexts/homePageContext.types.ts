@@ -3,8 +3,8 @@ import { MenuPlanDetFormData, MenuPlanDto, ToweekMenuPlanDetView } from "@/types
 
 export interface HomePageContextTypes {
   selectedPlan: MenuPlanDto | undefined;
-  selectedPlanStat: { error: any; isLoading: boolean };
-  selectedPlanMutate: any;
+  // selectedPlanStat: { error: any; isLoading: boolean };
+  // selectedPlanMutate: any;
   menuPlanDtoList: MenuPlanDto[] | undefined;
   menuPlanDtoListStat: { error: any; isLoading: boolean };
   toweekMenuPlanDetListDict: Record<string, ToweekMenuPlanDetView[]> | undefined;

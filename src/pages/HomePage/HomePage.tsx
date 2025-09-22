@@ -20,7 +20,7 @@ export const HomePage = () => {
   // useHomePageカスタムフックから値・関数を取得
   const {
     selectedPlan,
-    selectedPlanStat,
+    // selectedPlanStat,
     menuPlanDtoList,
     menuPlanDtoListStat,
     isMenuPlanComboBoxOpen,
@@ -49,8 +49,9 @@ export const HomePage = () => {
               >
                 <div className="flex justify-between h-full w-full">
                   <button className="h-full w-full">
-                    {selectedPlanStat && !selectedPlanStat.isLoading ? selectedPlan?.menuPlanNm : <LoadingSpinner /> }
-                  </button>
+                    {/* {selectedPlanStat && !selectedPlanStat.isLoading ? selectedPlan?.menuPlanNm : <LoadingSpinner /> } */}
+                    {selectedPlan?.menuPlanNm}
+                  </button> 
                   <div className="flex items-center w-6 cursor-pointer">
                       <i className="fa-solid fa-caret-down" />
                   </div>
