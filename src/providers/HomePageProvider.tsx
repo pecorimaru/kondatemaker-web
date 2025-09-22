@@ -31,15 +31,15 @@ export const HomePageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!changeable) {
       return;
     }
-    selectedPlanMutate(menuPlan, false);
     setIsRefreshing(true);
     try {
       const response = await apiClient.put("api/home/submitRecreateToweekMenuPlan", { selectedPlanId: menuPlan.menuPlanId });
       const data  = response.data;
       console.log(data.message, data);
+      // APIレスポンス後に状態を更新（競合状態を回避）
+      selectedPlanMutate(menuPlan);
       toweekMenuPlanDetListDictMutate(data.newToweekMenuPlanDetListDict, false);
     } catch (error: any) {
-      selectedPlanMutate(selectedPlan);
       showMessage(error?.response?.data?.detail || error?._messageTimeout || MSG_MISSING_REQUEST, MESSAGE_TYPE.ERROR);
     } finally {
       setIsRefreshing(false);

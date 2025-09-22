@@ -59,13 +59,13 @@ export const HomePage = () => {
                   {isMenuPlanComboBoxOpen && (
                     <ul className="mt-0.5 w-48 bg-white border rounded-sm shadow-lg">
                       {!menuPlanDtoListStat.isLoading && !menuPlanDtoListStat.error ? menuPlanDtoList?.map((menuPlan, index) => (
-                      <li
-                        key={index}
-                        className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
-                        onClick={() => handleMenuPlanComboBoxClick(menuPlan)}
-                      >
-                        {menuPlan?.menuPlanNm}
-                      </li>
+                        <li
+                          key={index}
+                          className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
+                          onClick={() => handleMenuPlanComboBoxClick(menuPlan)}
+                        >
+                          {menuPlan?.menuPlanNm}
+                        </li>
                       )): <li className="flex justify-center items-center h-10"><LoadingSpinner /></li>}
                     </ul>
                   )}
@@ -73,7 +73,7 @@ export const HomePage = () => {
               </td>
             </tr>
             {!weekdayDictStat?.isLoading && weekdayDict && Object.entries(weekdayDict)?.map((weekday) => (
-              <ToweekMenuPlanDetRowProvider weekdayCd={weekday[DICT_IDX.KEY] as WEEKDAY_CD} >
+              <ToweekMenuPlanDetRowProvider key={weekday[DICT_IDX.KEY]} weekdayCd={weekday[DICT_IDX.KEY] as WEEKDAY_CD} >
                 <ToweekMenuPlanDetRow />
               </ToweekMenuPlanDetRowProvider>
             ))}
