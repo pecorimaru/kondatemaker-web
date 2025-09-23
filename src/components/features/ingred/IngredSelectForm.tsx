@@ -57,7 +57,7 @@ export const IngredSelectForm: React.FC<IngredSelectFormProps> = ({ dataType, su
 
   const clearForm = () => {
     setIngredNm("");
-    setQty(0);
+    setQty(null);
     setUnitCd(unitDictByIngred ? Object.keys(unitDictByIngred)[0] : "1");
     setSalesAreaType(salesAreaDict ? Object.keys(salesAreaDict)[0] : "1");
   }
