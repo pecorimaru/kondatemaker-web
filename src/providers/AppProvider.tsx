@@ -17,6 +17,22 @@ export const AppProvider: React.FC<BaseProviderTypes> = ({ children }) => {
       // AuthManagerに状態更新関数を登録
       AuthManager.subscribe(setIsLoggedIn);
       
+      // Safari対応: body要素にontouchstart属性を追加してタッチイベントを有効化
+      if (typeof document !== 'undefined') {
+        document.body.setAttribute('ontouchstart', '');
+        
+        // Safari対応: documentレベルでのタッチイベント監視を追加
+        const handleDocumentTouch = () => {
+          // 何もしない - タッチイベントの有効化のため
+        };
+        document.addEventListener('touchstart', handleDocumentTouch, { passive: true });
+        
+        return () => {
+          document.removeEventListener('touchstart', handleDocumentTouch);
+          AuthManager.unsubscribe(setIsLoggedIn);
+        };
+      }
+      
       return () => {
         AuthManager.unsubscribe(setIsLoggedIn);
       };
@@ -48,17 +64,28 @@ export const AppProvider: React.FC<BaseProviderTypes> = ({ children }) => {
       id: number | null | undefined, 
       dataType: string
     ) => {
-      if (id === hoveredId) {
-        setApplyHighlighted(!applyHighlighted);
+      // Safari対応: タッチイベントのデフォルト動作を制御
+      e.stopPropagation();
+            
+      // Safari対応版：より確実な条件判定
+      if (id !== null && id !== undefined) {
+        if (id === hoveredId) {
+          setApplyHighlighted(!applyHighlighted);
+        } else {
+          setHoveredId(id);
+          setApplyHighlighted(true);
+        }
       } else {
-        setHoveredId(id ?? null);
+        setHoveredId(null);
         setApplyHighlighted(true);
       }
   
       const touch = e.touches[0];
       setTouchTimeout(setTimeout(() => {
-        const x = window.innerWidth - touch.clientX < 82 ? window.innerWidth -62 : touch.clientX +20;
-        setMenuPosition({ x: x, y: touch.clientY -70 });
+        // シンプルなアプローチ：clientX/clientYを直接使用（スクロール位置に影響されない）
+        const x = window.innerWidth - touch.clientX < 82 ? window.innerWidth - 62 : touch.clientX + 20;
+        const y = touch.clientY - 70;
+        setMenuPosition({ x: x, y: y });
         setContextMenuTargetId(id);
         setContextDataType(dataType);
       }, 500));  // 500ms 長押しでポップアップを表示
@@ -88,6 +115,9 @@ export const AppProvider: React.FC<BaseProviderTypes> = ({ children }) => {
     const closeContextMenu = () => {
       setContextMenuTargetId(null);
       setContextDataType(null);
+      if (touchTimeout) {  
+        clearTimeout(touchTimeout);
+      }
     };
   
     // ホバー状態の管理
