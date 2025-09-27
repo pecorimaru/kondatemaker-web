@@ -95,13 +95,12 @@ Public Sub Append(ByVal text As String)
     
     On Error GoTo ErrorHandler
     
-    ' ファイルの末尾に文字列を追加
-    Seek #m_fileHandle, LOF(m_fileHandle) + 1
+    ' ファイルに文字列を追加
     Print #m_fileHandle, text;
     
     ' 長さを更新
     m_currentLength = m_currentLength + Len(text)
-    m_currentPosition = LOF(m_fileHandle)
+    m_currentPosition = m_currentPosition + Len(text)
     
     Exit Sub
     
@@ -128,14 +127,28 @@ Public Function ToString() As String
     
     On Error GoTo ErrorHandler
     
-    Dim result As String
+    Dim readHandle As Integer
     Dim fileContent As String
     
-    ' ファイルの先頭に移動
-    Seek #m_fileHandle, 1
+    ' 現在のファイルを一時的に閉じる
+    Close #m_fileHandle
+    
+    ' 読み取り専用で開く
+    readHandle = FreeFile
+    Open m_tempFilePath For Input As #readHandle
     
     ' ファイル全体を読み込み
-    fileContent = Input$(LOF(m_fileHandle), #m_fileHandle)
+    If LOF(readHandle) > 0 Then
+        fileContent = Input$(LOF(readHandle), #readHandle)
+    Else
+        fileContent = ""
+    End If
+    
+    Close #readHandle
+    
+    ' 元のファイルを書き込みモードで再度開く
+    Open m_tempFilePath For Append As #m_fileHandle
+    
     ToString = fileContent
     
     Exit Function
@@ -153,7 +166,7 @@ Public Sub Clear()
     
     ' ファイルを閉じて再作成
     Close #m_fileHandle
-    Call CreateTempFile
+    Open m_tempFilePath For Output As #m_fileHandle
     
     m_currentLength = 0
     m_currentPosition = 0
@@ -190,8 +203,8 @@ Private Sub CreateTempFile()
     ' ファイルハンドルを取得
     m_fileHandle = FreeFile
     
-    ' ファイルを開く
-    Open m_tempFilePath For Binary Access Read Write As #m_fileHandle
+    ' ファイルを開く（出力モードで作成）
+    Open m_tempFilePath For Output As #m_fileHandle
     m_isFileOpen = True
     
     Exit Sub
