@@ -1,10 +1,7 @@
 export interface ToweekMenuPlanDetDto {
-  menuPlanDetId: number;
-  recipeId: number;
+  toweekMenuPlanDetId: number;
   weekdayCd: string;
-  weekdayNm: string;
+  recipeId: number;
   recipeNm: string;
-  recipeTypeCd: string;
-  recipeTypeNm: string;
-  recipeUrlThumb: string;
+  recipeUrl: string;
 } 

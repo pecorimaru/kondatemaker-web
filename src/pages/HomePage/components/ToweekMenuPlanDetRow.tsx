@@ -29,6 +29,7 @@ export const ToweekMenuPlanDetRow:React.FC = () => {
     isRefreshing,
     toweekMenuPlanDetViewList,
     recipeNmEditing,
+    isEditing,
     setIsEditing,
     recipeNmRef,
     recipeNmSuggestionsRef,
@@ -72,7 +73,7 @@ export const ToweekMenuPlanDetRow:React.FC = () => {
                     ref={recipeNmRef}
                     autoComplete='off'
                   />  
-                  {recipeNmSuggestions && recipeNmSuggestions.length > 0 &&
+                  {isEditing && recipeNmSuggestions && recipeNmSuggestions.length > 0 &&
                     <AutoComplete
                       suggestions={recipeNmSuggestions}
                       setCallback={(suggestions) => handleAddSuggestionClick(suggestions)}
@@ -101,11 +102,12 @@ export const ToweekMenuPlanDetRow:React.FC = () => {
                     className="weekday-recipe-data-base"
                     placeholder="未定"
                     ref={recipeNmRef}
+                    autoComplete='off'
                   />
                   {recipeNmSuggestions && recipeNmSuggestions.length > 0 &&
                     <AutoComplete
                       suggestions={recipeNmSuggestions}
-                      setCallback={(suggestions) => handleEditSuggestionClick(suggestions, row)}
+                      setCallback={(suggestions) => handleEditSuggestionClick(suggestions)}
                       contentRef={recipeNmRef}
                       suggestionsRef={recipeNmSuggestionsRef}
                     />
