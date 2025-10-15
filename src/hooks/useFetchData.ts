@@ -28,12 +28,12 @@ export function useFetchData<T = any>(key: string, params: Record<string, any>) 
     errorRetryInterval: 1000,
     // 認証エラー時の処理
     onError: (error) => {
-      if (error?.response?.status === 401) {
-        // 認証エラー時は全てのSWRキャッシュをクリア
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      }
+      // if (error?.response?.status === 403) {
+      //   // 認証エラー時は全てのSWRキャッシュをクリア
+      //   setTimeout(() => {
+      //     window.location.reload();
+      //   }, 100);
+      // }
     }
   });
 }

@@ -29,7 +29,6 @@ export interface ToweekMenuPlanDetRowContextTypes {
   flg: {
     recipeNmSuggestionsVisible: string;
     isEditing: string;
-    isAlert: string;
   };
   
   // ハンドラー
@@ -38,7 +37,7 @@ export interface ToweekMenuPlanDetRowContextTypes {
   handleAddRecipeNmChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleEditRecipeNmChange: (e: React.ChangeEvent<HTMLInputElement>, row: ToweekMenuPlanDetView) => void;
   handleClickOutside: (e: Event) => void;
-  handleEditSuggestionClick: (suggestion: string, row: ToweekMenuPlanDetView) => void;
+  handleEditSuggestionClick: (suggestion: string) => void;
   handleAddSuggestionClick: (suggestion: string) => void;
   
   // API操作
