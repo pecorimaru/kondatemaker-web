@@ -44,14 +44,14 @@ export const SignUpPageProvider: React.FC<{children: React.ReactNode}> = ({ chil
     onSuccess: async (tokenResponse) => {
       setGoogleLoading(true);
       try {
-        const userinfoResponse = await apiClient.get('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-          },
-          withCredentials: false, // 追記：Google APIsはwithCredentialsをサポートしない
-        });
-        const userinfoData = userinfoResponse.data;
-        const verifyResponse = await apiClient.post("api/login/googleLogin", decamelizeKeys({ email: userinfoData.email }));
+        // const userinfoResponse = await apiClient.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+        //   headers: {
+        //     Authorization: `Bearer ${tokenResponse.access_token}`,
+        //   },
+        //   withCredentials: false, // 追記：Google APIsはwithCredentialsをサポートしない
+        // });
+        // const userinfoData = userinfoResponse.data;
+        const verifyResponse = await apiClient.post("api/login/googleLogin", decamelizeKeys({ google_token: tokenResponse.access_token }));
         const verifyData = verifyResponse.data;
         localStorage.setItem("token", verifyData.accessToken);
         localStorage.setItem("isLoggedIn", "true");
