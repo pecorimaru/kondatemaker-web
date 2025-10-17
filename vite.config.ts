@@ -22,7 +22,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['.wsl.com'], // WSLのホスト名全般を許可
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
