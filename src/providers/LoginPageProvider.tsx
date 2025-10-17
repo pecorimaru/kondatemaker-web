@@ -31,6 +31,7 @@ export const LoginPageProvider: React.FC<BaseProviderTypes> = ({ children }) => 
           headers: {
             Authorization: `Bearer ${tokenResponse.access_token}`,
           },
+          withCredentials: false, // Google APIsはwithCredentialsをサポートしない
         });
         const userinfoData = userinfoResponse.data;
         const verifyResponse = await apiClient.post("api/login/googleLogin", decamelizeKeys({ email: userinfoData.email }));
