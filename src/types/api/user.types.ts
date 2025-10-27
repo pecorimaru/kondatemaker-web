@@ -1,7 +1,7 @@
 export interface UserDto {
   userId: number;
   userNm: string;
-  email?: string;
+  emailAddr: string;
 }
 
 export interface GroupMemberDto {

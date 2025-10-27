@@ -12,7 +12,7 @@ interface RecipeFormProps {
 
 export const RecipeForm: React.FC<RecipeFormProps> = ({ submitAction, closeRecipeForm, editData }) => {
 
-  const { recipeTypeDict, recipeTypeDictStat, setIsOpeningForm } = useApp();
+  const { loginUser, recipeTypeDict, recipeTypeDictStat, setIsOpeningForm } = useApp();
   
   const [recipeNm, setRecipeNm] = useState<string>(editData?.recipeNm || '');
   const [recipeNmK, setRecipeNmK] = useState<string>(editData?.recipeNmK || '');
@@ -20,7 +20,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ submitAction, closeRecip
   const [recipeUrl, setRecipeUrl] = useState<string>(editData?.recipeUrl || '');
   
   useEffect(() => {setIsOpeningForm(true)}, [setIsOpeningForm]);
-
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submitAction({recipeId: editData?.recipeId, recipeNm, recipeNmK, recipeType, recipeUrl});
@@ -71,6 +71,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ submitAction, closeRecip
               value={recipeUrl}
               onChange={(e) => setRecipeUrl(e.target.value)}
               className="form-input-base"
+              disabled={loginUser?.emailAddr === "kondatemaker@test"}
+              placeholder={loginUser?.emailAddr === "kondatemaker@test" ? "テストユーザーは入力不可" : ""}
             />
           </div>
 
