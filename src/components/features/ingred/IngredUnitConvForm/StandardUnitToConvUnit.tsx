@@ -45,6 +45,7 @@ export const StandardUnitToConvUnit: React.FC<StandardUnitToConvUnitProps> = ({
           onChange={handleConvRateChange}
           className="form-input-base w-32"
           step="0.01"
+          autoComplete="off"
         />
         <select
           id="convRate"

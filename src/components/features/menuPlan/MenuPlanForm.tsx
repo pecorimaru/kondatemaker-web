@@ -34,6 +34,7 @@ export const MenuPlanForm: React.FC<MenuPlanFormProps> = ({ submitAction, closeM
               onChange={(e) => setMenuPlanNm(e.target.value)}
               className="form-input-base"
               required
+              autoComplete="off"
             />
           </div>
 
@@ -45,6 +46,7 @@ export const MenuPlanForm: React.FC<MenuPlanFormProps> = ({ submitAction, closeM
               value={menuPlanNmK}
               onChange={(e) => setMenuPlanNmK(e.target.value)}
               className="form-input-base"
+              autoComplete="off"
             />
           </div>
 

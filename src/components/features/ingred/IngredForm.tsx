@@ -72,6 +72,7 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
               onChange={(e) => setIngredNm(e.target.value)}
               className="form-input-base"
               required
+              autoComplete="off"
             />
           </div>
 
@@ -83,6 +84,7 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
               onChange={(e) => setIngredNmK(e.target.value)}
               className="form-input-base"
               required
+              autoComplete="off"
             />
           </div>
 

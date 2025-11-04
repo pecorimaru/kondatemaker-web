@@ -71,7 +71,7 @@ export const ToweekMenuPlanDetRow:React.FC = () => {
                     onChange={(e) => handleAddRecipeNmChange(e)}
                     placeholder="未定"
                     ref={recipeNmRef}
-                    autoComplete='off'
+                    autoComplete="off"
                   />  
                   {isEditing && recipeNmSuggestions && recipeNmSuggestions.length > 0 &&
                     <AutoComplete
@@ -102,7 +102,7 @@ export const ToweekMenuPlanDetRow:React.FC = () => {
                     className="weekday-recipe-data-base"
                     placeholder="未定"
                     ref={recipeNmRef}
-                    autoComplete='off'
+                    autoComplete="off"
                   />
                   {recipeNmSuggestions && recipeNmSuggestions.length > 0 &&
                     <AutoComplete
