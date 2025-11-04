@@ -65,7 +65,6 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
     console.log(`食材追加 
       食材名:${formData?.ingredNm} 
       食材名（かな）${formData?.ingredNmK} 
-      親食材名:${formData?.parentIngredNm} 
       標準単位:${formData?.buyUnitCd} 
       売り場:${formData?.salesAreaType}`
     );
@@ -73,7 +72,6 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
       const response = await apiClient.post("api/ingred/submitAddIngred", { 
         ingredNm: formData?.ingredNm,
         ingredNmK: formData?.ingredNmK,
-        parentIngredNm: formData?.parentIngredNm, 
         buyUnitCd: formData?.buyUnitCd, 
         salesAreaType: formData?.salesAreaType, 
       });
@@ -95,7 +93,6 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
     console.log(`食材編集 
       食材名:${formData?.ingredNm} 
       食材名（かな）:${formData?.ingredNmK} 
-      親食材名:${formData?.parentIngredNm} 
       標準単位:${formData?.buyUnitCd} 
       売り場:${formData?.salesAreaType}`
     );
@@ -104,7 +101,6 @@ export const IngredPageProvider: React.FC<BaseProviderTypes> = ({ children }) =>
         ingredId: editIngredId,
         ingredNm: formData?.ingredNm,
         ingredNmK: formData?.ingredNmK,
-        parentIngredNm: formData?.parentIngredNm, 
         buyUnitCd: formData?.buyUnitCd, 
         salesAreaType: formData?.salesAreaType, 
       });
