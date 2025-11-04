@@ -62,6 +62,7 @@ export const ConvUnitToStandardUnit: React.FC<ConvUnitToStandardUnitProps> = ({
           onChange={handleConvRateChange}
           className="form-input-base w-36"
           step="0.01"
+          autoComplete="off"
         />
         <span className="pl-2 w-14">
           {unitDict && unitDict[ingred.buyUnitCd]}

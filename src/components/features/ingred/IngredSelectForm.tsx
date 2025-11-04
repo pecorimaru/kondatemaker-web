@@ -128,6 +128,7 @@ export const IngredSelectForm: React.FC<IngredSelectFormProps> = ({ dataType, su
               className="form-input-base"
               required
               ref={ingredNmRef}
+              autoComplete="off"
             />
           </div>
           {!ingredNmSuggestionsStat?.isLoading && ingredNmSuggestionsVisible && (
@@ -153,6 +154,7 @@ export const IngredSelectForm: React.FC<IngredSelectFormProps> = ({ dataType, su
               className="form-input-base"
               step="0.01"
               required={dataType === DATA_TYPE.RECIPE_INGRED ? true : false}
+              autoComplete="off"
             />
           </div>
 
