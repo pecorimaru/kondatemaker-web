@@ -25,26 +25,26 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
 
   const [ingredNm, setIngredNm] = useState<string>(editData?.ingredNm || "");
   const [ingredNmK, setIngredNmK] = useState<string>(editData?.ingredNmK || "");
-  const [parentIngredNm, setParentIngredNm] = useState<string>(editData?.parentIngredNm || "");
-  const [buyUnitCd, setStandardUnitCd] = useState<string>(editData?.buyUnitCd || (unitDict ? Object.keys(unitDict)[0] : "1"));
+  // const [parentIngredNm, setParentIngredNm] = useState<string>(editData?.parentIngredNm || "");
+  const [buyUnitCd, setBuyUnitCd] = useState<string>(editData?.buyUnitCd || (unitDict ? Object.keys(unitDict)[0] : "1"));
   const [salesAreaType, setSalesAreaType] = useState<string>(editData?.salesAreaType || (salesAreaDict ? Object.keys(salesAreaDict)[0] : "1"));
-  const { ingredNmSuggestions, ingredNmSuggestionsStat } = useIngredNmSuggestions(parentIngredNm);
-  const [ingredNmSuggestionsVisible, setIngredNmSuggestionsVisible] = useState(false);
+  // const { ingredNmSuggestions, ingredNmSuggestionsStat } = useIngredNmSuggestions(parentIngredNm);
+  // const [ingredNmSuggestionsVisible, setIngredNmSuggestionsVisible] = useState(false);
   
-  const parentIngredNmRef = useRef<HTMLDivElement>(null);
-  const ingredNmSuggestionsRef = useRef<HTMLDivElement>(null);
+  // const parentIngredNmRef = useRef<HTMLDivElement>(null);
+  // const ingredNmSuggestionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {setIsOpeningForm(true)}, [setIsOpeningForm]);
 
-  const handleParentIngredNmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setParentIngredNm(e.target.value);
-    setIngredNmSuggestionsVisible(true);
-  }
+  // const handleParentIngredNmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   e.preventDefault();
+  //   setParentIngredNm(e.target.value);
+  //   setIngredNmSuggestionsVisible(true);
+  // }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData: IngredFormData = { ingredNm, ingredNmK, parentIngredNm, buyUnitCd, salesAreaType };
+    const formData: IngredFormData = { ingredNm, ingredNmK, buyUnitCd, salesAreaType };
     submitAction(formData);
   };
 
@@ -52,11 +52,7 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
     if (e instanceof KeyboardEvent) { 
       if (e.key === 'Escape') {
         e.preventDefault();
-        if (ingredNmSuggestionsVisible) {
-          setIngredNmSuggestionsVisible(false);
-        } else {
-          closeIngredForm();
-        };
+        closeIngredForm();
       };
     };
   };
@@ -90,7 +86,7 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
             />
           </div>
 
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <label className="block text-sm text-gray-700">購入食材名<RequiredMark/></label>
             <input
               type="text"
@@ -109,13 +105,13 @@ export const IngredForm: React.FC<IngredFormProps> = ({ submitAction, closeIngre
               suggestionsRef={ingredNmSuggestionsRef}
               setSuggestionsVisible={setIngredNmSuggestionsVisible}
             />
-          )}
+          )} */}
 
           <div className="mt-4">
-            <label className="block text-sm text-gray-700">標準単位<RequiredMark/></label>
+            <label className="block text-sm text-gray-700">購入単位<RequiredMark/></label>
             <select
               value={buyUnitCd}
-              onChange={(e) => setStandardUnitCd(e.target.value)}
+              onChange={(e) => setBuyUnitCd(e.target.value)}
               className="form-input-base"
             >
               {!unitDictStat.isLoading && <OptionFromDict dict={unitDict} />}

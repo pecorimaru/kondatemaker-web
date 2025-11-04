@@ -17,7 +17,7 @@ export interface IngredFormData {
   ingredId?: number;
   ingredNm: string;
   ingredNmK: string;
-  parentIngredNm: string;
+  // parentIngredNm: string;
   buyUnitCd: string;
   salesAreaType: string;
   isRegisterContinue?: boolean;
