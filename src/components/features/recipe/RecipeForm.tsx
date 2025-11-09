@@ -71,8 +71,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ submitAction, closeRecip
               value={recipeUrl}
               onChange={(e) => setRecipeUrl(e.target.value)}
               className="form-input-base"
-              disabled={loginUser?.emailAddr === "kondatemaker@test"}
-              placeholder={loginUser?.emailAddr === "kondatemaker@test" ? "テストユーザーは入力不可" : ""}
+              disabled={loginUser?.emailAddr === "test@kondatemaker.invalid"}
+              placeholder={loginUser?.emailAddr === "test@kondatemaker.invalid" ? "テストユーザーは入力不可" : ""}
             />
           </div>
 
